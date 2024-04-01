@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campaign Tracker Dashboard</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <style>
+    /* Removed body background color */
+    
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    #map {
+      width: 100%;
+      height: 500px;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .header {
+      background-color: #f3eac6;
+      color: #fff;
+      padding: 20px;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #000000;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .view-on-map-button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Campaign Tracker Dashboard</h1>
+  </div>
+
+  <div id="map"></div>
+
+  <table>
+    <tr>
+      <th>Campaign</th>
+      <th>QR Codes Scans</th>
+      <th>Promo Code Entered</th>
+      <th>Flyers Distributed</th>
+      <th>Start Date</th>
+      <th>Action</th>
+    </tr>
+    <tr>
+      <td>Campaign 1</td>
+      <td>50</td>
+      <td>12</td>
+      <td>3453</td>
+      <td>21 January 1989</td>
+      <td><button class="view-on-map-button" onclick="viewOnMap([[51.516194024429446, -0.0916886329650879], [51.51521924732889, -0.08653879165649415], [51.51234820727565, -0.08692502975463869], [51.51103948711957, -0.09132385253906251], [51.51373701203605, -0.09625911712646484], [51.51606049455287, -0.09497165679931642]], 'Campaign 1', 28, 12, 3453)">View on Map</button></td>
+    </tr>
+    <tr>
+      <td>Campaign 2</td>
+      <td>25</td>
+      <td>15</td>
+      <td>3000</td>
+      <td>23 January 1989</td>
+      <td><button class="view-on-map-button" onclick="viewOnMap([[51.52376452810752, -0.08495092391967773], [51.52152154710149, -0.08111000061035158], [51.518744369931305, -0.0833415985107422], [51.519265103550666, -0.08765459060668947], [51.52093408143864, -0.08917808532714844], [51.522362677925386, -0.08827686309814455]], 'Campaign 2', 25, 15, 4000)">View on Map</button></td>
+    </tr>
+    <tr>
+      <td>Campaign 3</td>
+      <td>25</td>
+      <td>15</td>
+      <td>3000</td>
+      <td>23 January 1989</td>
+      <td><button class="view-on-map-button" onclick="viewOnMap([[51.45730947473664, 5.468294620513917], [51.45546434659948, 5.471684932708741], [51.45269651454696, 5.470161437988282], [51.452241878743635, 5.4673075675964355], [51.453632515180054, 5.464646816253662], [51.45525041387446, 5.464539527893066], [51.45681477378578, 5.466835498809815]], 'Campaign 3', 25, 15, 4000)">View on Map</button></td>
+    </tr>
+    <!-- Add more campaign rows here as needed -->
+  </table>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([51.505, -0.09], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+  }).addTo(map);
+
+  function viewOnMap(coordinates, campaignName, qrScans, promoCodes, flyers) {
+    var latLngs = coordinates;
+    var popupContent = `
+      <div style="display: flex; border-radius: 2px; overflow: hidden; background-color: #f7f7f7; width: 280px; height: 125px; ">
+        <div style="flex: 1;">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiksMqn5XXYZABNfR9i4pDyjX-NwD3nNRSr6tpYBx2azpWVeYvGkKstZBJn_K-O67gUnj24p_7ndXXwts2V7WK9BrbAykwRykkuPr9_ggM-0Flt-RmUTm2IZjjyKsf_chuVAg00tzxhsR9hUlWpRyRCH9f_KpIjroNRMyRDVlszE2pDIJsJpWFFf0AvQ1w/s2245/AFFICHE(1).jpg" alt="Campaign Poster" style="width: 100%; height: auto; ">
+        </div>
+        <div style="flex: 2; padding: 5px;">
+          <p style="font-size: 12px; margin-bottom: 10px;">${campaignName}</p>
+          <div style="margin-bottom: 10px;">
+            <strong>QR Codes Scans:</strong> ${qrScans}
+          </div>
+          <div style="margin-bottom: 10px;">
+            <strong>Promo Code Entered:</strong> ${promoCodes}
+          </div>
+          <div>
+            <strong>Flyers Distributed:</strong> ${flyers}
+          </div>
+        </div>
+      </div>
+    `;
+    var polygon = L.polygon(latLngs, { color: 'green' }).addTo(map);
+    polygon.bindPopup(popupContent).openPopup();
+    map.fitBounds(polygon.getBounds());
+  }
+</script>
+
+</body>
+</html>
